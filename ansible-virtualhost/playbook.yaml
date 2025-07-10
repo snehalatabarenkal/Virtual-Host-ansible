@@ -1,3 +1,4 @@
+
 ---
 - name: Configure Nginx Virtual Host
   hosts: webservers
@@ -31,6 +32,7 @@
       copy:
         src: files/mysite
         dest: /etc/nginx/sites-available/mysite
+      notify: Restart Nginx
 
     - name: Enable mysite virtual host
       file:
