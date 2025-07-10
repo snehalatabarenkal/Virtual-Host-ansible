@@ -1,0 +1,53 @@
+---
+- name: Configure Apache Virtual Host
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Create document root directory
+      file:
+        path: /var/www/mysite
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Add index.html for mysite
+      copy:
+        content: "<h1>Welcome to MySite!</h1>"
+        dest: /var/www/mysite/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Copy virtual host config file
+      copy:
+        src: files/mysite.conf
+        dest: /etc/apache2/sites-available/mysite.conf
+
+    - name: Enable mysite virtual host
+      command: a2ensite mysite.conf
+      notify: Restart Apache
+
+    - name: Disable default virtual host
+      command: a2dissite 000-default.conf
+      notify: Restart Apache
+
+    - name: Ensure Apache is running
+      service:
+        name: apache2
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
