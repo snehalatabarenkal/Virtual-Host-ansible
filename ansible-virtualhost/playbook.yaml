@@ -21,7 +21,7 @@
 
     - name: Add index.html for mysite
       copy:
-        content: "<h1>Welcome to MySite!</h1>"
+        content: "<h1>welcome to devops batch!</h1>"
         dest: /var/www/mysite/index.html
         owner: www-data
         group: www-data
