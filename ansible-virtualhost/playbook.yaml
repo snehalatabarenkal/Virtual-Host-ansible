@@ -1,13 +1,13 @@
 ---
-- name: Configure Apache Virtual Host
+- name: Configure Nginx Virtual Host
   hosts: webservers
   become: yes
 
   tasks:
 
-    - name: Install Apache
+    - name: Install Nginx
       apt:
-        name: apache2
+        name: nginx
         state: present
         update_cache: yes
 
@@ -29,25 +29,29 @@
 
     - name: Copy virtual host config file
       copy:
-        src: files/mysite.conf
-        dest: /etc/apache2/sites-available/mysite.conf
+        src: files/mysite
+        dest: /etc/nginx/sites-available/mysite
 
     - name: Enable mysite virtual host
-      command: a2ensite mysite.conf
-      notify: Restart Apache
+      file:
+        src: /etc/nginx/sites-available/mysite
+        dest: /etc/nginx/sites-enabled/mysite
+        state: link
 
     - name: Disable default virtual host
-      command: a2dissite 000-default.conf
-      notify: Restart Apache
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Restart Nginx
 
-    - name: Ensure Apache is running
+    - name: Ensure Nginx is running
       service:
-        name: apache2
+        name: nginx
         state: started
         enabled: true
 
   handlers:
-    - name: Restart Apache
+    - name: Restart Nginx
       service:
-        name: apache2
+        name: nginx
         state: restarted
