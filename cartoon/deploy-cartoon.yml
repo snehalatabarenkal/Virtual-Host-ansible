@@ -1,5 +1,5 @@
 - name: Deploy Cartoon Webpage
-  hosts: web
+  hosts: webservers
   become: yes
 
   tasks:
