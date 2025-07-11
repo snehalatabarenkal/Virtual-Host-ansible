@@ -1,45 +1,52 @@
----
-- name: Deploy Cartoon Character Website
-  hosts: webservers
+- name: Deploy Cartoon Webpage
+  hosts: web
   become: yes
 
-  vars:
-    web_root: /var/www/html
-
   tasks:
-
-    - name: Install Nginx
+    - name: Install Apache
       apt:
-        name: nginx
+        name: apache2
         state: present
         update_cache: yes
 
-    - name: Ensure web root directory exists
+    - name: Clear old files
       file:
-        path: "{{ web_root }}"
+        path: /var/www/html/
+        state: absent
+      notify: restart apache
+
+    - name: Recreate HTML folder
+      file:
+        path: /var/www/html/
         state: directory
         owner: www-data
         group: www-data
         mode: '0755'
 
-    - name: Copy index.html
+    - name: Deploy index.html
       copy:
-        src: ../cartoon-site/index.html
-        dest: "{{ web_root }}/index.html"
+        src: files/index.html
+        dest: /var/www/html/index.html
         owner: www-data
         group: www-data
         mode: '0644'
 
-    - name: Copy style.css
+    - name: Deploy style.css
       copy:
-        src: ../cartoon-site/style.css
-        dest: "{{ web_root }}/style.css"
+        src: files/style.css
+        dest: /var/www/html/style.css
         owner: www-data
         group: www-data
         mode: '0644'
 
-    - name: Ensure Nginx is started and enabled
+    - name: Ensure Apache is running
       service:
-        name: nginx
+        name: apache2
         state: started
-        enabled: true
+        enabled: yes
+
+  handlers:
+    - name: restart apache
+      service:
+        name: apache2
+        state: restarted
