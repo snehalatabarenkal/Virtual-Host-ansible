@@ -14,12 +14,6 @@
         state: present
         update_cache: yes
 
-    - name: Ensure Nginx is running
-      service:
-        name: nginx
-        state: started
-        enabled: yes
-
     - name: Create index.html
       copy:
         src: ../cartoon-site/index.html
