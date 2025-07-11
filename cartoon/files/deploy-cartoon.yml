@@ -14,7 +14,15 @@
         state: present
         update_cache: yes
 
-    - name: Create index.html
+    - name: Ensure web root directory exists
+      file:
+        path: "{{ web_root }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Copy index.html
       copy:
         src: ../cartoon-site/index.html
         dest: "{{ web_root }}/index.html"
@@ -22,10 +30,16 @@
         group: www-data
         mode: '0644'
 
-    - name: Create style.css
+    - name: Copy style.css
       copy:
         src: ../cartoon-site/style.css
         dest: "{{ web_root }}/style.css"
         owner: www-data
         group: www-data
         mode: '0644'
+
+    - name: Ensure Nginx is started and enabled
+      service:
+        name: nginx
+        state: started
+        enabled: true
