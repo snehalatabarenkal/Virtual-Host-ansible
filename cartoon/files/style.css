@@ -1,37 +1,63 @@
----
-- name: Deploy Cartoon Character Website
-  hosts: webservers
-  become: yes
+body {
+  background: #fce38a;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
 
-  vars:
-    web_root: /var/www/html
+.title {
+  color: #ff5e57;
+  font-size: 2em;
+  margin-top: 20px;
+}
 
-  tasks:
+.cartoon-container {
+  margin: auto;
+  width: 200px;
+}
 
-    - name: Install Nginx
-      apt:
-        name: nginx
-        state: present
-        update_cache: yes
+.head {
+  width: 150px;
+  height: 150px;
+  background: #ffb6b9;
+  border-radius: 50%;
+  margin: auto;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
 
-    - name: Ensure Nginx is running
-      service:
-        name: nginx
-        state: started
-        enabled: yes
+.eye {
+  width: 25px;
+  height: 25px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 40px;
+}
 
-    - name: Create index.html
-      copy:
-        src: ../cartoon-site/index.html
-        dest: "{{ web_root }}/index.html"
-        owner: www-data
-        group: www-data
-        mode: '0644'
+.eye.left {
+  left: 30px;
+}
 
-    - name: Create style.css
-      copy:
-        src: ../cartoon-site/style.css
-        dest: "{{ web_root }}/style.css"
-        owner: www-data
-        group: www-data
-        mode: '0644'
+.eye.right {
+  right: 30px;
+}
+
+.smile {
+  width: 60px;
+  height: 30px;
+  border-bottom: 5px solid #333;
+  border-radius: 0 0 50px 50px;
+  position: absolute;
+  bottom: 30px;
+  left: 45px;
+}
+
+.body {
+  width: 100px;
+  height: 120px;
+  background: #ff6f61;
+  margin: 20px auto 0;
+  border-radius: 50px;
+}
